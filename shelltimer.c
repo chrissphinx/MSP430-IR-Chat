@@ -131,9 +131,15 @@ int shell_cmd_send(shell_cmd_args *args) {
 
 	__enable_interrupt();
 
-	send_char(c[0]);
+	int i;
+	for(i = 0; c[i] != '\0'; i++) {
+		send_char(c[i]);
+		__delay_cycles(500000L);
+	}
 
-	cio_printf("OK, sent '%c'\n\r", c[0]);
+	cio_printf("OK, sent '%s'\n\r", c);
+
+	__disable_interrupt();
 
 	return 0;
 }
@@ -179,7 +185,7 @@ void main(void) {
 *******************************************/
 	for(;;) {
 		int j = 0;											// Char array counter
-		char cmd_line[255] = {0};							// Init empty array
+		char cmd_line[90] = {0};							// Init empty array
 
 		cio_print((char *) "$ ");							// Display prompt
 		char c = cio_getc();								// Wait for a character
